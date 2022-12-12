@@ -1,0 +1,43 @@
+﻿using static AdventOfCode.Utils;
+
+namespace AdventOfCode.Pathfinding;
+
+public static class Pathfinder
+{
+    public delegate int CostCalculator(char c, int x, int y);
+
+    public delegate int DistanceCalculator(int cost, int distance);
+
+    public static TNode[,] BuildNodes<TNode>(string[] data, CostCalculator getCost) where TNode : Node<TNode>, new()
+    {
+        var nodes = new TNode[data.Length, data[0].Length];
+        Iterate(nodes, (x, y, _) => nodes[x, y] = new TNode
+        {
+            Cost = getCost(data[x][y], x, y),
+            X = x, Y = y
+        });
+
+        nodes[0, 0].Distance = 0;
+        return nodes;
+    }
+
+    public static void Traverse<TNode>(TNode[,] nodes, TNode start, DistanceCalculator getDistance) where TNode : Node<TNode>
+    {
+        var queue = new PriorityQueue<TNode, int>();
+        queue.Enqueue(start, 0);
+        while (queue.Count != 0)
+        {
+            var current = queue.Dequeue();
+
+            foreach (var neighbour in current.GetNeighbours(nodes))
+            {
+                var distance = getDistance(neighbour.Cost, current.Distance);
+                if (distance < neighbour.Distance)
+                {
+                    neighbour.Distance = distance;
+                    queue.Enqueue(neighbour, distance);
+                }
+            }
+        }
+    }
+}
