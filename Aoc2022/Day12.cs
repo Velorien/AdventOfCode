@@ -28,7 +28,6 @@ public class Day12 : IDay
             }
         });
         
-        nodes[startX, startY].Distance = 0;
         Traverse(nodes, nodes[startX, startY], (cost, distance) => distance + 1);
 
         int d = nodes[endX, endY].Distance;
@@ -62,7 +61,6 @@ public class Day12 : IDay
         foreach (var (x, y) in starts)
         {
             Iterate(nodes, (_, _, node) => node.Distance = int.MaxValue);
-            nodes[x, y].Distance = 0;
             Traverse(nodes, nodes[x, y], (cost, distance) => distance + 1);
             distances.Add(nodes[endX, endY].Distance);
         }

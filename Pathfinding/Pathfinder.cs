@@ -17,12 +17,12 @@ public static class Pathfinder
             X = x, Y = y
         });
 
-        nodes[0, 0].Distance = 0;
         return nodes;
     }
 
     public static void Traverse<TNode>(TNode[,] nodes, TNode start, DistanceCalculator getDistance) where TNode : Node<TNode>
     {
+        start.Distance = 0;
         var queue = new PriorityQueue<TNode, int>();
         queue.Enqueue(start, 0);
         while (queue.Count != 0)
