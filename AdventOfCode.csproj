@@ -84,6 +84,10 @@
     <Content Include="Aoc2022\data\day14.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Remove="Aoc2022\data\day15.txt" />
+    <Content Include="Aoc2022\data\day15.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 
