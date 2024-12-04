@@ -1,6 +1,4 @@
-﻿using static AdventOfCode.Utils;
-
-namespace AdventOfCode.Pathfinding;
+﻿namespace AdventOfCode.Pathfinding;
 
 public static class Pathfinder
 {
@@ -11,7 +9,7 @@ public static class Pathfinder
     public static TNode[,] BuildNodes<TNode>(string[] data, CostCalculator getCost) where TNode : Node<TNode>, new()
     {
         var nodes = new TNode[data.Length, data[0].Length];
-        Iterate(nodes, (x, y, _) => nodes[x, y] = new TNode
+        nodes.Iterate((x, y, _) => nodes[x, y] = new TNode
         {
             Cost = getCost(data[x][y], x, y),
             X = x, Y = y

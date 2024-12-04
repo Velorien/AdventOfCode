@@ -60,7 +60,7 @@ public class Day12 : IDay
         var distances = new List<int>();
         foreach (var (x, y) in starts)
         {
-            Iterate(nodes, (_, _, node) => node.Distance = int.MaxValue);
+            nodes.Iterate((_, _, node) => node.Distance = int.MaxValue);
             Traverse(nodes, nodes[x, y], (cost, distance) => distance + 1);
             distances.Add(nodes[endX, endY].Distance);
         }

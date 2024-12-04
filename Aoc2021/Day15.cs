@@ -25,7 +25,7 @@ public class Day15 : IDay
         var sizeY = initialNodes.GetLength(1);
         var nodes = new OceanNode[sizeX * 5, sizeY * 5];
 
-        Iterate(initialNodes, (x, y, node) =>
+        initialNodes.Iterate((x, y, node) =>
         {
             for (int mulX = 0; mulX < 5; mulX++)
             {

@@ -12,7 +12,7 @@ public class Day8 : IDay
         SetVisibility(forest);
         int visibleCount = 0;
         
-        Iterate(forest, (_, _, tree) =>
+        forest.Iterate((_, _, tree) =>
         {
             if (tree.Visible) visibleCount++;
         });
@@ -30,16 +30,16 @@ public class Day8 : IDay
                 nextX += dx;
                 nextY += dy;
                 yield return forest[nextX, nextY];
-            } while (!IsEdge(forest, nextX, nextY));
+            } while (!forest.IsEdge(nextX, nextY));
         }
 
         var directions = new List<(int dx, int dy)> { (-1, 0), (1, 0), (0, -1), (0, 1) };
 
         var forest = BuildForest(data);
         int maxScore = int.MinValue, px = 0, py = 0;
-        Iterate(forest, (x, y, tree) =>
+        forest.Iterate((x, y, tree) =>
         {
-            if (IsEdge(forest, x, y)) return;
+            if (forest.IsEdge(x, y)) return;
 
             int currentScore = 1;
             foreach (var (dx, dy) in directions)
@@ -74,7 +74,7 @@ public class Day8 : IDay
     Tree[,] BuildForest(string[] data)
     {
         var forest = new Tree[data.Length, data[0].Length];
-        Iterate(forest, (x, y, _) =>
+        forest.Iterate((x, y, _) =>
         {
             forest[x, y] = new Tree(data[x][y]);
         });
