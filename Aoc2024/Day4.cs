@@ -19,7 +19,7 @@ public class Day4 : IDay
         int xmasCount = 0;
         foreach (var (x, y) in startPoints)
         {
-            foreach (var (dx, dy) in GetDirections())
+            foreach (var (dx, dy) in Utils.AllNeighbours)
             {
                 if (IsXmasInDirection(x, y, dx, dy, xmasMap))
                 {
@@ -67,20 +67,6 @@ public class Day4 : IDay
         }
 
         return result;
-    }
-
-    IEnumerable<(int x, int y)> GetDirections()
-    {
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                if (i != 0 || j != 0)
-                {
-                    yield return (i, j);
-                }
-            }
-        }
     }
 
     bool IsXmasInDirection(int x, int y, int dx, int dy, char[,] data)

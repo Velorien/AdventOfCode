@@ -2,7 +2,6 @@
 
 namespace AdventOfCode.Aoc2022;
 
-using static AdventOfCode.Utils;
 using static AdventOfCode.Pathfinding.Pathfinder;
 
 public class Day12 : IDay
@@ -72,7 +71,7 @@ public class Day12 : IDay
     {
         public override IEnumerable<MountainNode> GetNeighbours(MountainNode[,] nodes)
         {
-            foreach (var (dx, dy) in Neighbours)
+            foreach (var (dx, dy) in Utils.AllNeighbours)
             {
                 var x = dx + X;
                 var y = dy + Y;

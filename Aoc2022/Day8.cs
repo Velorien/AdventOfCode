@@ -1,8 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AdventOfCode.Aoc2022;
-
-using static AdventOfCode.Utils;
+﻿namespace AdventOfCode.Aoc2022;
 
 public class Day8 : IDay
 {
@@ -33,7 +29,6 @@ public class Day8 : IDay
             } while (!forest.IsEdge(nextX, nextY));
         }
 
-        var directions = new List<(int dx, int dy)> { (-1, 0), (1, 0), (0, -1), (0, 1) };
 
         var forest = BuildForest(data);
         int maxScore = int.MinValue, px = 0, py = 0;
@@ -42,7 +37,7 @@ public class Day8 : IDay
             if (forest.IsEdge(x, y)) return;
 
             int currentScore = 1;
-            foreach (var (dx, dy) in directions)
+            foreach (var (dx, dy) in Utils.AdjacentNeighbours)
             {
                 int currentDirection = 0;
                 foreach (var current in GetTreeLine(forest, x, y, dx, dy))
