@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AdventOfCode.Aoc2024;
+﻿namespace AdventOfCode.Aoc2024;
 
 public class Day5 : IDay
 {
@@ -53,7 +51,7 @@ public class Day5 : IDay
     {
         public int Compare(int x, int y) => (order.GetValueOrDefault(x), order.GetValueOrDefault(y)) switch
         {
-            (null, null) => throw new UnreachableException(),
+            (null, null) => throw new ArgumentException("Both values cannot be null."),
             (null, _) => 1,
             (_, null) => -1,
             _ => order[x].Contains(y) ? -1 : 1
