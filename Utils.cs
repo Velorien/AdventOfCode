@@ -48,4 +48,47 @@ public static class Utils
 
         yield return collection.Skip(start).Take(current);
     }
+
+    public static bool ContainsAll<T>(this IReadOnlyCollection<T> collection, IEnumerable<T> items)
+    {
+        foreach (var item in items)
+        {
+            if (!collection.Contains(item))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static int FirstIndexOf<T>(this IReadOnlyCollection<T> collection, Func<T, bool> predicate)
+    {
+        int index = 0;
+        foreach (var item in collection)
+        {
+            if (predicate(item))
+            {
+                return index;
+            }
+
+            index++;
+        }
+
+        throw new InvalidOperationException("No matching item found");
+    }
+
+    public static int FirstIndexOf<T>(this IReadOnlyCollection<T> collection, T item) =>
+        FirstIndexOf(collection, x => x?.Equals(item) ?? x == null && item == null);
+
+    public static bool All<T>(this IReadOnlyCollection<T> collection, Func<T, int, bool> predicate)
+    {
+        int index = 0;
+        foreach (var item in collection)
+        {
+            if (!predicate(item, index++)) return false;
+        }
+
+        return true;
+    }
 }
