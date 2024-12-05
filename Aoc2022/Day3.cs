@@ -27,7 +27,7 @@ public class Day3 : IDay
                 var sharedItems = x
                     .Select(x => x.ToCharArray())
                     .Aggregate((c, n) => c.Intersect(n).ToArray());
-                
+
                 return sharedItems.Select(x => priorities[x]).Sum();
             })
             .Sum();
@@ -39,6 +39,7 @@ public class Day3 : IDay
     {
         var priorities = new Dictionary<char, int>();
         int priority = 1;
+
         for (int i = 'a'; i <= 'z'; i++)
         {
             priorities[(char)i] = priority++;

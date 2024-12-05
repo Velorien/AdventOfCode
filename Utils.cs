@@ -31,22 +31,33 @@ public static class Utils
     public static bool ContainsPosition<T>(this T[,] array, int x, int y) =>
         x >= 0 && x < array.GetLength(0) && y >= 0 && y < array.GetLength(1);
 
-    public static IEnumerable<IEnumerable<T>> ChunkBy<T>(
+    public static IEnumerable<T[]> ChunkBy<T>(
         this IReadOnlyCollection<T> collection,
-        Func<T, bool> predicate)
+        Func<T, bool> predicate,
+        bool ignoreEmpty = false)
     {
-        int start = 0, current = 0;
+        var buffer = new List<T>();
         foreach (var item in collection)
         {
             if (predicate(item))
             {
-                yield return collection.Skip(start).Take(current);
-                start += ++current;
+                if (buffer.Count != 0 || !ignoreEmpty)
+                {
+                    yield return buffer.ToArray();
+                }
+
+                buffer.Clear();
             }
-            else current++;
+            else
+            {
+                buffer.Add(item);
+            }
         }
 
-        yield return collection.Skip(start).Take(current);
+        if (buffer.Count != 0 || !ignoreEmpty)
+        {
+            yield return buffer.ToArray();
+        }
     }
 
     public static bool ContainsAll<T>(this IReadOnlyCollection<T> collection, IEnumerable<T> items)
