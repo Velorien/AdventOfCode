@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using AdventOfCode;
 
-Run(2024, 4, 2);
+Run(2024, 5, 2);
 
 void Run(int year, int day, int task)
 {
