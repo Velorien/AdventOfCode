@@ -34,11 +34,11 @@ public static class Utils
     public static char[,] To2DCharArray(this string[] array)
     {
         var charArray = new char[array[0].Length, array.Length];
-        for (int x = 0; x < array.Length; x++)
+        for (int y = 0; y < array.Length; y++)
         {
-            for (int y = 0; y < array[0].Length; y++)
+            for (int x = 0; x < array[0].Length; x++)
             {
-                charArray[y, x] = array[x][y];
+                charArray[x, y] = array[y][x];
             }
         }
 

@@ -3,7 +3,7 @@
 public class Day6 : IDay
 {
     private readonly (int dx, int dy)[] _directions = [(0, -1), (1, 0), (0, 1), (-1, 0)];
-    private int _dirIndex = 0;
+    private int _dirIndex;
     private int _startX;
     private int _startY;
 
