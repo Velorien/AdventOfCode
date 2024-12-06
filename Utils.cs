@@ -31,6 +31,20 @@ public static class Utils
     public static bool ContainsPosition<T>(this T[,] array, int x, int y) =>
         x >= 0 && x < array.GetLength(0) && y >= 0 && y < array.GetLength(1);
 
+    public static char[,] To2DCharArray(this string[] array)
+    {
+        var charArray = new char[array[0].Length, array.Length];
+        for (int x = 0; x < array.Length; x++)
+        {
+            for (int y = 0; y < array[0].Length; y++)
+            {
+                charArray[y, x] = array[x][y];
+            }
+        }
+
+        return charArray;
+    }
+
     public static IEnumerable<T[]> ChunkBy<T>(
         this IReadOnlyCollection<T> collection,
         Func<T, bool> predicate,
