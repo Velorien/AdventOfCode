@@ -1,4 +1,5 @@
 ﻿using System.Buffers;
+using System.Collections;
 
 namespace AdventOfCode;
 
@@ -119,66 +120,21 @@ public static class Utils
         return true;
     }
 
-    private static readonly ArrayPool<int> CombinationArrayPool = ArrayPool<int>.Create();
-
-    public static IEnumerable<IEnumerable<T>> Combinations<T>(this IReadOnlyCollection<T> collection, int k)
-    {
-        var track = CombinationArrayPool.Rent(k);
-        ZeroTrack();
-        bool canAdvance = true;
-        while (canAdvance)
-        {
-            yield return Combination();
-            canAdvance = Advance();
-        }
-
-        CombinationArrayPool.Return(track);
-
-        IEnumerable<T> Combination()
-        {
-            for (int i = 0; i < k; i++)
-            {
-                yield return collection.ElementAt(track[i]);
-            }
-        }
-
-        bool Advance()
-        {
-            int current = 0;
-            bool carryOver;
-            do
-            {
-                track[current]++;
-                carryOver = track[current] == collection.Count;
-                if (carryOver)
-                {
-                    track[current] = 0;
-                    current++;
-                }
-            } while (carryOver && current < k);
-
-            return current < k;
-        }
-
-        void ZeroTrack()
-        {
-            for (int i = 0; i < k; i++) track[i] = 0;
-        }
-    }
-
-    public static IEnumerable<IEnumerable<T>> CombinationsFast<T>(this IReadOnlyCollection<T> collection, int k)
+    public static IEnumerable<IReadOnlyList<T>> Combinations<T>(this IList<T> collection, int k)
     {
         ulong max = (ulong)Math.Pow(collection.Count, k);
+        var buffer = new T[k];
         for (ulong i = 0; i <= max; i++)
         {
-            yield return Combination(i);
+            SetCombination(i);
+            yield return buffer;
         }
 
-        IEnumerable<T> Combination(ulong value)
+        void SetCombination(ulong value)
         {
             for (int i = 0; i < k; i++)
             {
-                yield return collection.ElementAt((int)(value % (ulong)collection.Count));
+                buffer[i] = collection[(int)(value % (ulong)collection.Count)];
                 value /= (ulong)collection.Count;
             }
         }

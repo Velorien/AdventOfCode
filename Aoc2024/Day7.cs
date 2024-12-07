@@ -6,6 +6,7 @@ public class Day7 : IDay
 {
     private static readonly Operation Add = (x, y) => x + y;
     private static readonly Operation Mul = (x, y) => x * y;
+
     private static readonly Operation Con = (x, y) =>
     {
         var pow = Math.Floor(Math.Log10(y)) + 1;
@@ -28,7 +29,7 @@ public class Day7 : IDay
     public void Run2(string[] data)
     {
         var sum = ParseInput(data)
-            .Select(x => (x.value, x.operands, operations: AddMulCon.CombinationsFast(x.operands.Length - 1)))
+            .Select(x => (x.value, x.operands, operations: AddMulCon.Combinations(x.operands.Length - 1)))
             .Where(x => x.operations.Any(o => IsValid(x.value, x.operands, o)))
             .Sum(x => x.value);
 
@@ -40,31 +41,12 @@ public class Day7 : IDay
         .Select(x => (long.Parse(x[0]),
             x[1].Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(long.Parse).ToArray()));
 
-    private IEnumerable<IEnumerable<Operation>> GetOperationCombinations(int count)
+    private bool IsValid(long value, long[] operands, IReadOnlyList<Operation> operations)
     {
-        var max = 1 << count;
-        for (int i = 0; i <= max; i++)
-        {
-            yield return GetOperationsForValue(i, count);
-        }
-    }
-
-    private IEnumerable<Operation> GetOperationsForValue(long value, int power)
-    {
-        for (int i = 0; i <= power; i++)
-        {
-            var position = 1 << i;
-            yield return (value & position) == 0 ? Add : Mul;
-        }
-    }
-
-    private bool IsValid(long value, long[] operands, IEnumerable<Operation> operations)
-    {
-        int index = 1;
         var current = operands[0];
-        foreach (var operation in operations)
+        for (int i = 0; i < operations.Count; i++)
         {
-            var next = operation(current, operands[index++]);
+            var next = operations[i](current, operands[i + 1]);
             if (current <= next)
             {
                 current = next;
