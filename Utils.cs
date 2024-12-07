@@ -1,7 +1,4 @@
-﻿using System.Buffers;
-using System.Collections;
-
-namespace AdventOfCode;
+﻿namespace AdventOfCode;
 
 public static class Utils
 {
