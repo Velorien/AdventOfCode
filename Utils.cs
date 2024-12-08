@@ -25,8 +25,19 @@ public static class Utils
         }
     }
 
+    public static void Iterate<T>(this IEnumerable<T> collection, Action<T> action)
+    {
+        foreach (var item in collection)
+        {
+            action(item);
+        }
+    }
+
     public static bool IsEdge<T>(this T[,] array, int x, int y) =>
         x == 0 || y == 0 || x == array.GetLength(0) - 1 || y == array.GetLength(1) - 1;
+
+    public static bool ContainsPosition<T>(this T[,] array, (int x, int y) pos) =>
+        ContainsPosition(array, pos.x, pos.y);
 
     public static bool ContainsPosition<T>(this T[,] array, int x, int y) =>
         x >= 0 && x < array.GetLength(0) && y >= 0 && y < array.GetLength(1);
@@ -133,6 +144,17 @@ public static class Utils
             {
                 buffer[i] = collection[(int)(value % (ulong)collection.Count)];
                 value /= (ulong)collection.Count;
+            }
+        }
+    }
+
+    public static IEnumerable<(T first, T second)> Pairs<T>(this IReadOnlyList<T> collection)
+    {
+        for (int i = 0; i < collection.Count; i++)
+        {
+            for (int j = i + 1; j < collection.Count; j++)
+            {
+                yield return (collection[i], collection[j]);
             }
         }
     }
