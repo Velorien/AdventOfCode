@@ -10,24 +10,15 @@ public class Day8 : IDay
         var antennas = GetAntennas(input);
         var antinodes = new HashSet<Point>();
 
-        antennas.Values
-            .SelectMany(x => x.Pairs())
-            .Iterate(c =>
-            {
-                Point delta = (c.first.x - c.second.x, c.first.y - c.second.y);
-                var first = c.first.Plus(delta);
-                var second = c.second.Minus(delta);
+        foreach (var c in antennas.Values.SelectMany(x => x.Pairs()))
+        {
+            Point delta = (c.first.x - c.second.x, c.first.y - c.second.y);
+            var first = c.first.Plus(delta);
+            var second = c.second.Minus(delta);
 
-                if (input.ContainsPosition(first))
-                {
-                    antinodes.Add(first);
-                }
-
-                if (input.ContainsPosition(second))
-                {
-                    antinodes.Add(second);
-                }
-            });
+            AddAntinodeIfPositionExists(input, first, antinodes);
+            AddAntinodeIfPositionExists(input, second, antinodes);
+        }
 
         Console.WriteLine($"Sum: {antinodes.Count}");
     }
@@ -37,41 +28,36 @@ public class Day8 : IDay
         var input = data.To2DCharArray();
         var antennas = GetAntennas(input);
         var antinodes = new HashSet<Point>();
+
         foreach (var positions in antennas.Values)
         {
             antinodes.UnionWith(positions);
         }
 
-        antennas.Values
-            .SelectMany(x => x.Pairs())
-            .Iterate(c =>
+        foreach (var c in antennas.Values.SelectMany(x => x.Pairs()))
+        {
+            Point delta = (c.first.x - c.second.x, c.first.y - c.second.y);
+            int i = 1;
+
+            while (true)
             {
-                Point delta = (c.first.x - c.second.x, c.first.y - c.second.y);
-                int i = 1;
-
-                while (true)
+                var current = c.first.Plus(delta.Times(i++));
+                if (AddAntinodeIfPositionExists(input, current, antinodes) is false)
                 {
-                    var current = c.first.Plus(delta.Times(i));
-                    if (input.ContainsPosition(current))
-                    {
-                        antinodes.Add(current);
-                        i++;
-                    }
-                    else break;
+                    break;
                 }
+            }
 
-                i = 1;
-                while (true)
+            i = 1;
+            while (true)
+            {
+                var current = c.second.Minus(delta.Times(i++));
+                if (AddAntinodeIfPositionExists(input, current, antinodes) is false)
                 {
-                    var current = c.second.Minus(delta.Times(i));
-                    if (input.ContainsPosition(current))
-                    {
-                        antinodes.Add(current);
-                        i++;
-                    }
-                    else break;
+                    break;
                 }
-            });
+            }
+        }
 
         Console.WriteLine($"Sum: {antinodes.Count}");
     }
@@ -93,6 +79,17 @@ public class Day8 : IDay
         });
 
         return antennas;
+    }
+
+    private bool AddAntinodeIfPositionExists(char[,] input, Point position, HashSet<Point> antinodes)
+    {
+        bool inputContainsPosition = input.ContainsPosition(position);
+        if (inputContainsPosition)
+        {
+            antinodes.Add(position);
+        }
+
+        return inputContainsPosition;
     }
 }
 
