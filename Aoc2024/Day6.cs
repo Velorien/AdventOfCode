@@ -9,14 +9,14 @@ public class Day6 : IDay
 
     public void Run1(string[] data)
     {
-        var map = data.To2DCharArray();
+        var map = data.To2DArray(x => x);
         FindStart(map);
         Console.WriteLine($"Visited {CountVisitedTiles(map)} tiles");
     }
 
     public void Run2(string[] data)
     {
-        var map = data.To2DCharArray();
+        var map = data.To2DArray(x => x);
         FindStart(map);
         HashSet<(int x, int y)> visited = [];
         CountVisitedTiles(map, visited);

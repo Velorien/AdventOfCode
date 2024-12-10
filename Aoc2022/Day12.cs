@@ -26,8 +26,8 @@ public class Day12 : IDay
                     return c - 'a';
             }
         });
-        
-        Traverse(nodes, nodes[startX, startY], (cost, distance) => distance + 1);
+
+        Traverse(nodes, nodes[startX, startY], (_, distance) => distance + 1);
 
         int d = nodes[endX, endY].Distance;
 
@@ -75,9 +75,7 @@ public class Day12 : IDay
             {
                 var x = dx + X;
                 var y = dy + Y;
-                if (x < 0 || x >= nodes.GetLength(0) ||
-                    y < 0 || y >= nodes.GetLength(1) ||
-                    Cost - nodes[x, y].Cost < -1)
+                if (!nodes.ContainsPosition(x, y) || Cost - nodes[x, y].Cost < -1)
                 {
                     continue;
                 }

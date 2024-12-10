@@ -13,12 +13,11 @@ public record Node<TNode> where TNode : Node<TNode>
         {
             var x = dx + X;
             var y = dy + Y;
-            if (x < 0 || x >= nodes.GetLength(0) ||
-                y < 0 || y >= nodes.GetLength(1))
+            if (!nodes.ContainsPosition(x, y))
             {
                 continue;
             }
-                
+
             yield return nodes[X + dx, Y + dy];
         }
     }

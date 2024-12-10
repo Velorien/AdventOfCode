@@ -6,7 +6,7 @@ public class Day8 : IDay
 {
     public void Run1(string[] data)
     {
-        var input = data.To2DCharArray();
+        var input = data.To2DArray(x => x);
         var antennas = GetAntennas(input);
         var antinodes = new HashSet<Point>();
 
@@ -25,7 +25,7 @@ public class Day8 : IDay
 
     public void Run2(string[] data)
     {
-        var input = data.To2DCharArray();
+        var input = data.To2DArray(x => x);
         var antennas = GetAntennas(input);
         var antinodes = new HashSet<Point>();
 

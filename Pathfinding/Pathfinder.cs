@@ -6,6 +6,8 @@ public static class Pathfinder
 
     public delegate int DistanceCalculator(int cost, int distance);
 
+    public delegate T NodeFactory<out T>(char c, int x, int y);
+
     public static TNode[,] BuildNodes<TNode>(string[] data, CostCalculator getCost) where TNode : Node<TNode>, new()
     {
         var nodes = new TNode[data.Length, data[0].Length];
@@ -18,7 +20,8 @@ public static class Pathfinder
         return nodes;
     }
 
-    public static void Traverse<TNode>(TNode[,] nodes, TNode start, DistanceCalculator getDistance) where TNode : Node<TNode>
+    public static void Traverse<TNode>(TNode[,] nodes, TNode start, DistanceCalculator getDistance)
+        where TNode : Node<TNode>
     {
         start.Distance = 0;
         var queue = new PriorityQueue<TNode, int>();
