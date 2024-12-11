@@ -41,6 +41,30 @@ public class Day11 : IDay
 
     public void Run2(string[] data)
     {
+        var stones = data[0].Split(' ').Select(ulong.Parse).ToDictionary(x => x, _ => (ulong)1);
+        for (var i = 0; i < 75; i++)
+        {
+            var dict = new Dictionary<ulong, ulong>();
+            foreach (var (stone, count) in stones)
+            {
+                var (becomes, spawns) = Blink(stone);
+                SetOrAdd(dict, becomes, count);
+                if (spawns.HasValue) SetOrAdd(dict, spawns.Value, count);
+            }
+
+            stones = dict;
+        }
+
+        Console.WriteLine($"There are {stones.Values.Sum(x => (decimal)x)} stones");
+
+        void SetOrAdd(Dictionary<ulong, ulong> dict, ulong stone, ulong value)
+        {
+            if (!dict.TryAdd(stone, value)) dict[stone] += value;
+        }
+    }
+
+    public void Run22(string[] data)
+    {
         var input = data[0].Split(' ').Select(ulong.Parse).ToArray();
         ulong stoneCount = 0;
 
