@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode;
+﻿using System.Numerics;
+
+namespace AdventOfCode;
 
 public static class Utils
 {
@@ -121,5 +123,22 @@ public static class Utils
                 yield return (collection[i], collection[j]);
             }
         }
+    }
+
+    public static T GetNumberOfDigits<T>(this T number)
+        where T : INumber<T>, IComparisonOperators<T, T, bool>, IMultiplyOperators<T, T, T>, IAdditionOperators<T, T, T>
+    {
+        T length = T.CreateChecked(1), threshold = T.CreateChecked(9);
+        T ten = T.CreateChecked(10);
+        T nine = T.CreateChecked(9);
+
+        while (number > threshold)
+        {
+            length++;
+            threshold *= ten;
+            threshold += nine;
+        }
+
+        return length;
     }
 }
