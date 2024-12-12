@@ -17,7 +17,7 @@ public class Day4 : IDay
         {
             var numberLength = SetBytes(bytes, inputLength, value++);
             _md5.TryComputeHash(bytes[..(inputLength + numberLength)], hash, out _);
-            
+
             if (IsSolution(hash)) break;
         }
 
@@ -38,7 +38,7 @@ public class Day4 : IDay
         {
             var numberLength = SetBytes(bytes, inputLength, value++);
             _md5.TryComputeHash(bytes[..(inputLength + numberLength)], hash, out _);
-            
+
             if (IsSolution(hash)) break;
         }
 
@@ -49,26 +49,13 @@ public class Day4 : IDay
 
     private static int SetBytes(byte[] bytes, int inputLength, int number)
     {
-        var length = GetNumberLength(number);   
+        var length = number.GetNumberOfDigits();
         for (var i = 1; i <= length; i++)
         {
             bytes[inputLength + length - i] = (byte)('0' + number % 10);
             number /= 10;
         }
-        
-        return length;
-    }
 
-    private static int GetNumberLength(int number)
-    {
-        int length = 1, threshold = 9;
-        while (number > threshold)
-        {
-            length++;
-            threshold *= 10;
-            threshold += 9;
-        }
-        
         return length;
     }
 }
