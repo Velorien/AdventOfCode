@@ -1,5 +1,7 @@
 ﻿namespace AdventOfCode.Aoc2024;
 
+using WallWithDirection = (int sideX, int sideY, Day12.GardenTile tile);
+
 public class Day12 : IDay
 {
     public void Run1(string[] data)
@@ -29,18 +31,22 @@ public class Day12 : IDay
         {
             if (t.IsVisited) return;
 
-            List<HashSet<(int sx, int sy, GardenTile tile)>> walls = [];
-            var currentArea = new HashSet<GardenTile>();
+            List<HashSet<WallWithDirection>> walls = [];
+            HashSet<GardenTile> currentArea = [];
+
             MapRegion(input, x, y, currentArea);
 
             foreach (var tile in currentArea)
             {
-                foreach (var (sx, sy) in tile.GetWallSides())
+                foreach (var (sideX, sideY) in tile.GetWallSides())
                 {
-                    if (walls.Any(w => w.Contains((sx, sy, tile)))) continue;
-                    var currentWall = new HashSet<(int sx, int sy, GardenTile tile)> { (sx, sy, tile) };
-                    FindWallTiles(sx, sy, tile, currentWall, 1);
-                    FindWallTiles(sx, sy, tile, currentWall, -1);
+                    if (walls.Any(w => w.Contains((sideX, sideY, tile)))) continue;
+
+                    HashSet<WallWithDirection> currentWall = [(sideX, sideY, tile)];
+
+                    FindWallTiles(sideX, sideY, tile, currentWall, 1);
+                    FindWallTiles(sideX, sideY, tile, currentWall, -1);
+
                     walls.Add(currentWall);
                 }
             }
@@ -50,21 +56,20 @@ public class Day12 : IDay
 
         Console.WriteLine($"Total cost: {totalCost}");
 
-        void FindWallTiles(int sideX, int sideY, GardenTile tile,
-            HashSet<(int sx, int sy, GardenTile tile)> currentWall, int direction)
+        void FindWallTiles(int sideX, int sideY, GardenTile tile, HashSet<WallWithDirection> currentWall, int direction)
         {
-            int cx = tile.X, cy = tile.Y;
+            int currentX = tile.X, currentY = tile.Y;
             while (true)
             {
-                cx += sideY * direction;
-                cy += sideX * direction;
-                if (!input.ContainsPosition(cx, cy) ||
-                    input[cx, cy].Value != tile.Value) break;
+                currentX += sideY * direction;
+                currentY += sideX * direction;
+                if (!input.ContainsPosition(currentX, currentY) ||
+                    input[currentX, currentY].Value != tile.Value) break;
 
-                if (!input.ContainsPosition(cx + sideX, cy + sideY) ||
-                    input[cx + sideX, cy + sideY].Value != tile.Value)
+                if (!input.ContainsPosition(currentX + sideX, currentY + sideY) ||
+                    input[currentX + sideX, currentY + sideY].Value != tile.Value)
                 {
-                    currentWall.Add((sideX, sideY, input[cx, cy]));
+                    currentWall.Add((sideX, sideY, input[currentX, currentY]));
                 }
                 else break;
             }
@@ -86,7 +91,7 @@ public class Day12 : IDay
         }
     }
 
-    class GardenTile(char value, int x, int y)
+    internal class GardenTile(char value, int x, int y)
     {
         public char Value { get; } = value;
         public int X { get; } = x;
@@ -94,17 +99,8 @@ public class Day12 : IDay
         public bool IsVisited { get; set; }
         public List<GardenTile> Neighbors { get; } = new(4);
 
-        public IEnumerable<(int x, int y)> GetWallSides()
-        {
-            if (Neighbors.Count == 4) yield break;
-
-            foreach (var side in Utils.AdjacentNeighbours)
-            {
-                if (!Neighbors.Any(n => n.X == side.x + x && n.Y == side.y + y))
-                {
-                    yield return side;
-                }
-            }
-        }
+        public IEnumerable<(int sideX, int sideY)> GetWallSides() => Neighbors.Count < 4
+            ? Utils.AdjacentNeighbours.Where(side => !Neighbors.Any(n => n.X == side.x + x && n.Y == side.y + y))
+            : [];
     }
 }

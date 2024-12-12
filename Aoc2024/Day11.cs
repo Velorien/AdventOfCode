@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-
-namespace AdventOfCode.Aoc2024;
+﻿namespace AdventOfCode.Aoc2024;
 
 public class Day11 : IDay
 {
