@@ -7,6 +7,25 @@ public static class Utils
     public static IReadOnlyCollection<(int x, int y)> AdjacentNeighbours { get; } =
         [(-1, 0), (1, 0), (0, -1), (0, 1)];
 
+    public static IEnumerable<(int x, int y)> AdjacentPositionsWithinBounds<T>(this T[,] matrix, int x, int y)
+    {
+        foreach (var (dx, dy) in AdjacentNeighbours)
+        {
+            if (matrix.ContainsPosition(x + dx, y + dy))
+            {
+                yield return (x + dx, y + dy);
+            }
+        }
+    }
+
+    public static IEnumerable<T> AdjacentNeighboursWithinBounds<T>(this T[,] matrix, int x, int y)
+    {
+        foreach (var (nx, ny) in matrix.AdjacentPositionsWithinBounds(x, y))
+        {
+            yield return matrix[nx, ny];
+        }
+    }
+
     public static IReadOnlyCollection<(int x, int y)> AllNeighbours { get; } =
     [
         (-1, 1), (0, 1), (1, 1),
