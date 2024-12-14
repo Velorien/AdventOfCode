@@ -52,13 +52,14 @@ public static class ArrayUtils
         return charArray;
     }
 
-    public static void Print<T>(this T[,] array, Func<T, string> toString)
+    public static void Print<T>(this T[,] array, Func<T, string>? toString = null)
     {
         for (int y = 0; y < array.GetLength(1); y++)
         {
             for (int x = 0; x < array.GetLength(0); x++)
             {
-                Console.Write(toString(array[x, y]));
+                if (toString != null) Console.Write(toString(array[x, y]));
+                else Console.Write(array[x, y]);
             }
 
             Console.WriteLine();
