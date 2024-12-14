@@ -65,4 +65,21 @@ public static class ArrayUtils
             Console.WriteLine();
         }
     }
+
+    public static IEnumerable<T[]> Window<T>(this T[] array, int windowSize)
+    {
+        if (windowSize < 1) throw new ArgumentException("Window size must be greater than zero.");
+        if (array.Length < windowSize) throw new ArgumentException("Array can't be smaller than window size");
+
+        var window = new T[windowSize];
+        for (int i = 0; i < array.Length - windowSize; i++)
+        {
+            for (int w = 0; w < windowSize; w++)
+            {
+                window[w] = array[i + w];
+            }
+
+            yield return window;
+        }
+    }
 }
