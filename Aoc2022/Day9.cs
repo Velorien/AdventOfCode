@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Aoc2022;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Aoc2022;
 
 public class Day9 : IDay
 {
@@ -22,7 +24,7 @@ public class Day9 : IDay
                     var current = rope[knot];
                     var dx = rope[knot - 1].x - current.x;
                     var dy = rope[knot - 1].y - current.y;
-                    
+
                     if (Math.Abs(dx) > 1 || Math.Abs(dy) > 1)
                     {
                         rope[knot] = (current.x + int.Sign(dx), current.y + int.Sign(dy));
@@ -32,7 +34,7 @@ public class Day9 : IDay
                 }
             }
         }
-        
+
         Console.WriteLine($"Tail visited {tailPositions.Count} positions");
     }
 
@@ -44,7 +46,8 @@ public class Day9 : IDay
             ["L", var count] => (x: -1, y: 0, d: int.Parse(count)),
             ["R", var count] => (x: 1, y: 0, d: int.Parse(count)),
             ["U", var count] => (x: 0, y: -1, d: int.Parse(count)),
-            ["D", var count] => (x: 0, y: 1, d: int.Parse(count))
+            ["D", var count] => (x: 0, y: 1, d: int.Parse(count)),
+            _ => throw new UnreachableException()
         };
     }).ToList();
 }

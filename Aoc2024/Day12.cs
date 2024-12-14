@@ -100,7 +100,7 @@ public class Day12 : IDay
         public List<GardenTile> Neighbors { get; } = new(4);
 
         public IEnumerable<(int sideX, int sideY)> GetWallSides() => Neighbors.Count < 4
-            ? Utils.AdjacentNeighbours.Where(side => !Neighbors.Any(n => n.X == side.x + x && n.Y == side.y + y))
+            ? Utils.AdjacentNeighbours.Where(side => !Neighbors.Any(n => n.X == side.x + X && n.Y == side.y + Y))
             : [];
     }
 }

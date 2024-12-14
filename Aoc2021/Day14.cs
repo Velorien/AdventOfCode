@@ -30,7 +30,7 @@ public class Day14 : IDay
         sw.Stop();
 
         var counts = results.Keys.Select(x => x.Item1).Distinct()
-            .ToDictionary(k => k, v => 0l);
+            .ToDictionary(k => k, _ => 0L);
         foreach (var item in results)
         {
             counts[item.Key.Item1] += item.Value;
