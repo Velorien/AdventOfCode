@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AdventOfCode.Aoc2024;
+﻿namespace AdventOfCode.Aoc2024;
 
 public class Day14 : IDay
 {
