@@ -1,9 +1,11 @@
 ﻿namespace AdventOfCode.Aoc2024;
 
+using Dir = (int x, int y);
+
 public class Day16 : IDay
 {
-    private MazeNode[,] _map = null!;
-    private int _startX, _startY, _endX, _endY;
+    private static MazeNode[,] _map = null!;
+    private int _startX, _startY, _endX, _endY, _minimalCost;
 
     public void Run1(string[] data)
     {
@@ -25,7 +27,9 @@ public class Day16 : IDay
 
         Traverse();
 
-        Console.WriteLine($"Cost is {_map[_endX, _endY].Cost.Values.Min()}");
+        _minimalCost = Utils.CardinalDirections.Select(d => _map[_endX, _endY].NeighbourOpposite(d).CostOfLeaving[d])
+            .Min();
+        Console.WriteLine($"Cost is {_minimalCost}");
     }
 
     public void Run2(string[] data)
@@ -37,28 +41,36 @@ public class Day16 : IDay
 
     private void Traverse()
     {
-        _map[_startX, _startY].Cost[(1, 0)] = 0;
-        var queue = new Queue<(MazeNode node, int x, int y)>();
-        queue.Enqueue((_map[_startX, _startY], 1, 0));
-
-        while (queue.TryDequeue(out var current))
+        var queue = new Queue<(MazeNode node, Dir d)>();
+        var start = _map[_startX, _startY];
+        foreach (var d in Utils.CardinalDirections)
         {
-            var (node, dx, dy) = current;
-            if (node.Value == 'E') continue;
-
-            foreach (var (nx, ny) in Utils.CardinalDirections)
+            if (start.Neighbour(d).Value != '#')
             {
-                if ((nx + dx, ny + dy) == (0, 0)) continue;
+                start.CostOfLeaving[d] = d == (1, 0) ? 1 : 1001;
+                queue.Enqueue((start.Neighbour(d), d));
+            }
+        }
 
-                var cost = nx == dx && ny == dy ? 1 : 1001;
-                var next = _map[node.X + nx, node.Y + ny];
+        while (queue.TryDequeue(out var q))
+        {
+            var (current, d) = q;
+            if (current.Value == 'E') continue;
 
+            foreach (var n in Utils.CardinalDirections)
+            {
+                if ((n.x + d.x, n.y + d.y) == (0, 0)) continue;
+                var prev = current.NeighbourOpposite(d);
+
+                var cost = (n == d ? 1 : 1001) + prev.CostOfLeaving[d];
+
+                var next = current.Neighbour(n);
                 if (next.Value == '#') continue;
 
-                if (next.Cost[(nx, ny)] >= node.Cost[(dx, dy)] + cost)
+                if (current.CostOfLeaving[n] >= cost)
                 {
-                    next.Cost[(nx, ny)] = cost + node.Cost[(dx, dy)];
-                    queue.Enqueue((next, nx, ny));
+                    current.CostOfLeaving[n] = cost;
+                    queue.Enqueue((next, n));
                 }
             }
         }
@@ -67,31 +79,35 @@ public class Day16 : IDay
     private int Backtrack()
     {
         var set = new HashSet<MazeNode>();
-        var queue = new Queue<MazeNode>();
+        var queue = new Queue<(MazeNode node, Dir d)>();
 
-        queue.Enqueue(_map[_endX, _endY]);
-
-        while (queue.TryDequeue(out var current))
+        var end = _map[_endX, _endY];
+        foreach (var d in Utils.CardinalDirections)
         {
-            set.Add(current);
-            if (current.Value == 'S') continue;
-
-            var isEnd = current.Value == 'E';
-            if (isEnd)
+            if (end.NeighbourOpposite(d).CostOfLeaving[d] == _minimalCost)
             {
-                var minCost = current.Cost.Values.Min();
-                foreach (var ((dx, dy), _) in current.Cost.Where(c => c.Value == minCost))
-                {
-                    queue.Enqueue(_map[current.X - dx, current.Y - dy]);
-                }
+                queue.Enqueue((end.NeighbourOpposite(d), d));
             }
-            else
+        }
+
+        set.Add(end);
+
+        while (queue.TryDequeue(out var q))
+        {
+            var (current, dir) = q;
+
+            if (!set.Add(current)) continue;
+
+            foreach (var d in Utils.CardinalDirections)
             {
-                foreach (var (dx, dy) in current.BestTrackNeighbours())
+                var next = current.NeighbourOpposite(d);
+                if (next.Value == '#') continue;
+
+                var cost = dir == d ? 1 : 1001;
+
+                if (next.CostOfLeaving[d] + cost == current.CostOfLeaving[dir])
                 {
-                    var next = _map[current.X - dx, current.Y - dy];
-                    if (next.Value == '#') continue;
-                    queue.Enqueue(_map[current.X - dx, current.Y - dy]);
+                    queue.Enqueue((next, d));
                 }
             }
         }
@@ -105,14 +121,10 @@ public class Day16 : IDay
         public int Y { get; } = y;
         public char Value { get; } = value;
 
-        public Dictionary<(int, int), int> Cost { get; } =
-            Utils.CardinalDirections.ToDictionary(k => k, _ => int.MaxValue);
+        public MazeNode Neighbour((int x, int y) d) => _map[X + d.x, Y + d.y];
+        public MazeNode NeighbourOpposite((int x, int y) d) => _map[X - d.x, Y - d.y];
 
-        public IEnumerable<(int, int)> BestTrackNeighbours()
-        {
-            var min = Cost.MinBy(x => x.Value);
-            //if (min.Value == int.MaxValue) return [];
-            return Cost.Where(c => c.Value == min.Value || c.Value == min.Value + 1000).Select(c => c.Key);
-        }
+        public Dictionary<(int, int), int> CostOfLeaving { get; } =
+            Utils.CardinalDirections.ToDictionary(k => k, _ => int.MaxValue);
     }
 }
