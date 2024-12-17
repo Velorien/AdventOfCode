@@ -7,7 +7,7 @@ public class Day8 : IDay
         var forest = BuildForest(data);
         SetVisibility(forest);
         int visibleCount = 0;
-        
+
         forest.Iterate((_, _, tree) =>
         {
             if (tree.Visible) visibleCount++;
@@ -37,7 +37,7 @@ public class Day8 : IDay
             if (forest.IsEdge(x, y)) return;
 
             int currentScore = 1;
-            foreach (var (dx, dy) in Utils.AdjacentNeighbours)
+            foreach (var (dx, dy) in Utils.CardinalDirections)
             {
                 int currentDirection = 0;
                 foreach (var current in GetTreeLine(forest, x, y, dx, dy))
@@ -47,10 +47,11 @@ public class Day8 : IDay
                         currentDirection++;
                         break;
                     }
+
                     if (tree.Height < current.Height) break;
                     currentDirection++;
                 }
-                
+
                 if (currentDirection == 0) return;
                 currentScore *= currentDirection;
             }
@@ -69,10 +70,7 @@ public class Day8 : IDay
     Tree[,] BuildForest(string[] data)
     {
         var forest = new Tree[data.Length, data[0].Length];
-        forest.Iterate((x, y, _) =>
-        {
-            forest[x, y] = new Tree(data[x][y]);
-        });
+        forest.Iterate((x, y, _) => { forest[x, y] = new Tree(data[x][y]); });
 
         return forest;
     }
@@ -103,7 +101,7 @@ public class Day8 : IDay
                 }
             }
         }
-        
+
         for (int y = 0; y < forest.GetLength(1); y++)
         {
             int maxHeight = int.MinValue;
