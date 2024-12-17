@@ -82,7 +82,7 @@ public class Day12 : IDay
         current.IsVisited = true;
         visited.Add(current);
 
-        foreach (var (nx, ny) in input.AdjacentPositionsWithinBounds(x, y))
+        foreach (var (nx, ny) in input.CardinalDirectionsWithinBounds(x, y))
         {
             var neighbour = input[nx, ny];
             if (current.Value == neighbour.Value) current.Neighbors.Add(neighbour);
@@ -100,7 +100,7 @@ public class Day12 : IDay
         public List<GardenTile> Neighbors { get; } = new(4);
 
         public IEnumerable<(int sideX, int sideY)> GetWallSides() => Neighbors.Count < 4
-            ? Utils.AdjacentNeighbours.Where(side => !Neighbors.Any(n => n.X == side.x + X && n.Y == side.y + Y))
+            ? Utils.CardinalDirections.Where(side => !Neighbors.Any(n => n.X == side.x + X && n.Y == side.y + Y))
             : [];
     }
 }

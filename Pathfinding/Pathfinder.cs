@@ -4,9 +4,7 @@ public static class Pathfinder
 {
     public delegate int CostCalculator(char c, int x, int y);
 
-    public delegate int DistanceCalculator(int cost, int distance);
-
-    public delegate T NodeFactory<out T>(char c, int x, int y);
+    public delegate int DistanceCalculator<in T>(T neighbour, T current);
 
     public static TNode[,] BuildNodes<TNode>(string[] data, CostCalculator getCost) where TNode : Node<TNode>, new()
     {
@@ -20,7 +18,7 @@ public static class Pathfinder
         return nodes;
     }
 
-    public static void Traverse<TNode>(TNode[,] nodes, TNode start, DistanceCalculator getDistance)
+    public static void Traverse<TNode>(TNode[,] nodes, TNode start, DistanceCalculator<TNode> getDistance)
         where TNode : Node<TNode>
     {
         start.Distance = 0;
@@ -32,7 +30,7 @@ public static class Pathfinder
 
             foreach (var neighbour in current.GetNeighbours(nodes))
             {
-                var distance = getDistance(neighbour.Cost, current.Distance);
+                var distance = getDistance(neighbour, current);
                 if (distance < neighbour.Distance)
                 {
                     neighbour.Distance = distance;

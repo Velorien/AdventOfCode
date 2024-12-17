@@ -13,7 +13,7 @@ public class Day15 : IDay
         var end = nodes[nodes.GetLength(0) - 1, nodes.GetLength(1) - 1];
         var sw = new Stopwatch();
         sw.Start();
-        Traverse(nodes, nodes[0, 0], (cost, distance) => cost + distance);
+        Traverse(nodes, nodes[0, 0], (n, c) => n.Cost + c.Distance);
         sw.Stop();
         Console.WriteLine($"Distance is {end.Distance} in {sw.ElapsedMilliseconds}");
     }
@@ -47,7 +47,7 @@ public class Day15 : IDay
         var end = nodes[sizeX * 5 - 1, sizeY * 5 - 1];
         var sw = new Stopwatch();
         sw.Start();
-        Traverse(nodes, nodes[0, 0], (cost, distance) => cost + distance);
+        Traverse(nodes, nodes[0, 0], (n, c) => n.Cost + c.Distance);
         sw.Stop();
         Console.WriteLine($"Distance is {end.Distance} in {sw.ElapsedMilliseconds}");
     }

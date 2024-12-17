@@ -9,7 +9,7 @@ public record Node<TNode> where TNode : Node<TNode>
 
     public virtual IEnumerable<TNode> GetNeighbours(TNode[,] nodes)
     {
-        foreach (var (dx, dy) in Utils.AllNeighbours)
+        foreach (var (dx, dy) in Utils.AllDirections)
         {
             var x = dx + X;
             var y = dy + Y;

@@ -19,7 +19,7 @@ public class Day4 : IDay
         int xmasCount = 0;
         foreach (var (x, y) in startPoints)
         {
-            foreach (var (dx, dy) in Utils.AllNeighbours)
+            foreach (var (dx, dy) in Utils.AllDirections)
             {
                 if (IsXmasInDirection(x, y, dx, dy, xmasMap))
                 {

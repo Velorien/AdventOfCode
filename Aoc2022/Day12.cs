@@ -27,7 +27,7 @@ public class Day12 : IDay
             }
         });
 
-        Traverse(nodes, nodes[startX, startY], (_, distance) => distance + 1);
+        Traverse(nodes, nodes[startX, startY], (_, c) => c.Distance + 1);
 
         int d = nodes[endX, endY].Distance;
 
@@ -60,7 +60,7 @@ public class Day12 : IDay
         foreach (var (x, y) in starts)
         {
             nodes.Iterate((_, _, node) => node.Distance = int.MaxValue);
-            Traverse(nodes, nodes[x, y], (cost, distance) => distance + 1);
+            Traverse(nodes, nodes[x, y], (_, c) => c.Distance + 1);
             distances.Add(nodes[endX, endY].Distance);
         }
 
@@ -71,7 +71,7 @@ public class Day12 : IDay
     {
         public override IEnumerable<MountainNode> GetNeighbours(MountainNode[,] nodes)
         {
-            foreach (var (dx, dy) in Utils.AllNeighbours)
+            foreach (var (dx, dy) in Utils.AllDirections)
             {
                 var x = dx + X;
                 var y = dy + Y;

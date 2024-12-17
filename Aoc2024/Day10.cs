@@ -21,7 +21,7 @@ public class Day10 : IDay
         foreach (var trailhead in trailheads)
         {
             ZeroMap();
-            Pathfinder.Traverse(map, trailhead, (_, d) => d + 1);
+            Pathfinder.Traverse(map, trailhead, (_, c) => c.Distance + 1);
             map.Iterate((_, _, tile) =>
             {
                 if (tile.Distance == 9) score++;
@@ -53,7 +53,7 @@ public class Day10 : IDay
                 return;
             }
 
-            foreach (var n in Utils.AdjacentNeighbours)
+            foreach (var n in Utils.CardinalDirections)
             {
                 var nx = x + n.x;
                 var ny = y + n.y;
@@ -69,7 +69,7 @@ public class Day10 : IDay
     {
         public override IEnumerable<TrailNode> GetNeighbours(TrailNode[,] nodes)
         {
-            foreach (var (dx, dy) in Utils.AdjacentNeighbours)
+            foreach (var (dx, dy) in Utils.CardinalDirections)
             {
                 var x = dx + X;
                 var y = dy + Y;
